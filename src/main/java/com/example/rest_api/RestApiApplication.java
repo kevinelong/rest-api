@@ -2,6 +2,7 @@ package com.example.rest_api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,19 +27,19 @@ public class RestApiApplication {
         return employeeRepository.findById(Long.parseLong(id)); // Provided by CrudRepository
     }
 
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @RequestMapping(path = "/employee", method = RequestMethod.POST)
+    public Employee addEmployee(@RequestBody Employee employee) {
+        return employeeRepository.save(employee);
+    }
+//
 //    @RequestMapping(path = "/employee", method = RequestMethod.POST)
 //    @ResponseStatus(value = HttpStatus.CREATED)
-//    public Employee addEmployee(@RequestBody Employee employee) {
-//        return employeeRepository.save(employee);
+//    public String submitForm(@RequestParam String first, @RequestParam String last, @RequestParam String notes) {
+//        Employee employee = new Employee(first, last, notes);
+//        employeeRepository.save(employee);
+//        return "success";
 //    }
-
-    @RequestMapping(path = "/employee", method = RequestMethod.POST)
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public String submitForm(@RequestParam String first, @RequestParam String last, @RequestParam String notes) {
-        Employee employee = new Employee(first, last, notes);
-        employeeRepository.save(employee);
-        return "success";
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(RestApiApplication.class, args);

@@ -12,38 +12,39 @@
 <body>
 <main>
     <h1>Edit:</h1>
-    <form action="/api/v1/employee" method="post">
-    <table id="edit" class="table table-striped table-bordered table-hover">
-        <tr>
-            <th>
-                ID
-            </th>
-            <th>
-                First
-            </th>
-            <th>
-                Last
-            </th>
-            <th>
-                Notes
-            </th>
-        </tr>
-        <tr>
-            <th>
-                <input name="id">
-            </th>
-            <th>
-                <input name="first">
-            </th>
-            <th>
-                <input name="last">
-            </th>
-            <th>
-                <textarea name="notes"></textarea>
-            </th>
-        </tr>
-    </table>
-    <input type="submit" value="SAVE">
+    <!--    <form action="/api/v1/employee" method="post">-->
+    <form id="edit_form">
+        <table id="edit" class="table table-striped table-bordered table-hover">
+            <tr>
+                <th>
+                    ID
+                </th>
+                <th>
+                    First
+                </th>
+                <th>
+                    Last
+                </th>
+                <th>
+                    Notes
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    <input name="id">
+                </th>
+                <th>
+                    <input name="firstname">
+                </th>
+                <th>
+                    <input name="lastname">
+                </th>
+                <th>
+                    <input name="notes">
+                </th>
+            </tr>
+        </table>
+        <input type="submit" value="SAVE">
     </form>
 </main>
 </body>
@@ -51,6 +52,19 @@
         integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
         crossorigin="anonymous"></script>
 <script>
+
+    const form = document.getElementById('edit_form');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const formObject = Object.fromEntries(formData.entries());
+      const response = await fetch('/api/v1/employee', {
+          method:"POST",
+          body:JSON.stringify(formObject),
+          headers: {'Content-Type': 'application/json'}
+      });
+    });
 
 </script>
 </html>
