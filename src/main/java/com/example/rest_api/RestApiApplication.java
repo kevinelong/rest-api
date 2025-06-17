@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -23,8 +24,12 @@ public class RestApiApplication {
     }
 
     @RequestMapping(path = "/employee/{id}", method = RequestMethod.GET)
-    public Optional<Employee> getEmployee(@PathVariable String id) {
-        return employeeRepository.findById(Long.parseLong(id)); // Provided by CrudRepository
+    public Employee getEmployee(@PathVariable String id) {
+        return employeeRepository.findById(Long.parseLong(id)) // Attempt to find the item by ID
+                .orElseThrow(() -> new ResponseStatusException( // If not found...
+                        HttpStatus.NOT_FOUND, // Throw ResponseStatusException with 404 status
+                        "Employee with ID " + id + " not found" // Include a descriptive message
+                ));
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
