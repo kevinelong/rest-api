@@ -18,6 +18,12 @@ public class Employee {
 
     @Column
     private String notes;
+
+    Employee(String firstname, String lastname, String notes){
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.notes = notes;
+    }
     // Constructors, getters, setters
 
     public Long getEmployeeid() {

@@ -2,40 +2,45 @@ package com.example.rest_api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @SpringBootApplication
 @RestController
-@RequestMapping("/data")
-
+@RequestMapping("/api/v1")
 public class RestApiApplication {
-	@Autowired
-	private EmployeeRepository employeeRepository;
+    @Autowired //initialized by the framework
+    private EmployeeRepository employeeRepository;
 
-	@RequestMapping("/employee")
-	public Iterable<Employee> findAllEmployees() {
-		return employeeRepository.findAll(); // Provided by CrudRepository
-	}
+    @RequestMapping("/employee")
+    public Iterable<Employee> findAllEmployees() {
+        return employeeRepository.findAll(); // Provided by CrudRepository
+    }
 
-	@GetMapping
-	public ResponseEntity<String> getAll() {
-		return new ResponseEntity<>("List of all data", HttpStatus.OK);
-	}	@GetMapping
+    @RequestMapping(path = "/employee/{id}", method = RequestMethod.GET)
+    public Optional<Employee> getEmployee(@PathVariable String id) {
+        return employeeRepository.findById(Long.parseLong(id)); // Provided by CrudRepository
+    }
 
-	@RequestMapping("/data2")
-	public ResponseEntity<String> getAll2() {
-		return new ResponseEntity<>("Second url baby", HttpStatus.OK);
-	}
+//    @RequestMapping(path = "/employee", method = RequestMethod.POST)
+//    @ResponseStatus(value = HttpStatus.CREATED)
+//    public Employee addEmployee(@RequestBody Employee employee) {
+//        return employeeRepository.save(employee);
+//    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(RestApiApplication.class, args);
-	}
+    @RequestMapping(path = "/employee", method = RequestMethod.POST)
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public String submitForm(@RequestParam String first, @RequestParam String last, @RequestParam String notes) {
+        Employee employee = new Employee(first, last, notes);
+        employeeRepository.save(employee);
+        return "success";
+    }
 
+    public static void main(String[] args) {
+        SpringApplication.run(RestApiApplication.class, args);
+    }
 }
